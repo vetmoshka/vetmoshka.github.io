@@ -1,33 +1,3 @@
-// self-typing nickname
-const word = "1337";
-const target = document.getElementById("nickname-text");
-
-let i = 0;
-let deleting = false;
-
-function loop() {
-  if (!deleting) {
-    target.textContent = word.slice(0, i + 1);
-    i++;
-    if (i === word.length) {
-      deleting = true;
-      setTimeout(loop, 1400);
-      return;
-    }
-  } else {
-    target.textContent = word.slice(0, i - 1);
-    i--;
-    if (i === 0) {
-      deleting = false;
-      setTimeout(loop, 500);
-      return;
-    }
-  }
-  setTimeout(loop, deleting ? 90 : 140);
-}
-
-loop();
-
 // live MSK time
 const clock = document.getElementById("clock");
 
@@ -42,3 +12,31 @@ function updateClock() {
 
 updateClock();
 setInterval(updateClock, 1000);
+
+// drifting sakura petals in the background
+const petalLayer = document.getElementById("petals");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (petalLayer && !reduceMotion) {
+  const total = 14;
+
+  for (let i = 0; i < total; i++) {
+    const petal = document.createElement("div");
+    petal.className = "petal";
+
+    const size = 6 + Math.random() * 7;
+    const left = Math.random() * 100;
+    const duration = 9 + Math.random() * 10;
+    const delay = Math.random() * -20;
+    const drift = (Math.random() - 0.5) * 160;
+
+    petal.style.width = `${size}px`;
+    petal.style.height = `${size}px`;
+    petal.style.left = `${left}vw`;
+    petal.style.animationDuration = `${duration}s`;
+    petal.style.animationDelay = `${delay}s`;
+    petal.style.setProperty("--drift", `${drift}px`);
+
+    petalLayer.appendChild(petal);
+  }
+}
